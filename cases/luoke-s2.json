@@ -25,7 +25,9 @@
     "B站5月24官方公告动态评论35,421",
     "点赞14,683，转发864",
     "已采674条B站热门评论样本",
-    "5月22首次道歉动态ID仍待定位，媒体评论量口径待核验"
+    "5月22首次道歉动态ID仍待定位，媒体评论量口径待核验",
+    "已补充玩家反馈证据：B站/微博/TapTap共652条去重样本",
+    "人工精选11条代表性玩家原话摘录"
   ],
   "timeline": [
     {
@@ -417,5 +419,251 @@
       "启发可迁移",
       "适用于大版本治理、公告机制、情感资产审计和共存方案设计"
     ]
-  ]
+  ],
+  "feedbackEvidence": {
+    "sourceHeat": [
+      {
+        "platform": "B站",
+        "sourceType": "玩家/官方视频",
+        "title": "BV18DL86yE9N",
+        "url": "https://www.bilibili.com/video/BV18DL86yE9N",
+        "metrics": "公开页面可访问，量化字段待补",
+        "sampleComments": 0,
+        "note": "{'code': -404, 'message': '啥都木有', 'ttl': 1}"
+      },
+      {
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "title": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "url": "https://www.bilibili.com/opus/1205972893407641606",
+        "metrics": "评论 35463 / 点赞 14715 / 转发 860",
+        "sampleComments": 300,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "【洛克王国世界】S2赛季官方暗改合集！！！洛克官方简直疯了！！暗改女洛克鸭子坐！！希望官方认真对待！！！",
+        "url": "https://www.bilibili.com/video/BV1v3Li6vEHc",
+        "metrics": "播放 23380 / 评论 396 / 点赞 560 / 转发 196 / 收藏 69",
+        "sampleComments": 3,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "【洛克王国】woc！策划道歉了？！对于s2赛季动作暗改问题，回溯功能，精灵养成材料获取与减负问题回应！补偿2个棱镜球？！！",
+        "url": "https://www.bilibili.com/video/BV1EaL86oEBJ",
+        "metrics": "播放 84889 / 评论 272 / 点赞 250 / 转发 15 / 收藏 17",
+        "sampleComments": 98,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "洛克王国世界官方深夜发布致歉声明",
+        "url": "https://www.bilibili.com/video/BV1qgLi6KEMD",
+        "metrics": "播放 186 / 评论 0 / 点赞 3 / 转发 0 / 收藏 0",
+        "sampleComments": 0,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "价值千元的补偿 洛克王国世界S2更新事故 补偿及修复公告 来自开水策划的道歉",
+        "url": "https://www.bilibili.com/video/BV1hhGH6yEKX",
+        "metrics": "播放 188 / 评论 0 / 点赞 3 / 转发 0 / 收藏 1",
+        "sampleComments": 0,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "【洛克王国世界】官方补偿了11个棱镜球！！我们到底要不要原谅官方？？？为啥策划致歉了很多小洛克还是不接受？？",
+        "url": "https://www.bilibili.com/video/BV1rMGH68EKj",
+        "metrics": "播放 23375 / 评论 617 / 点赞 301 / 转发 19 / 收藏 51",
+        "sampleComments": 160,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "开水老师策划给洛克王国世界玩家们的一封信",
+        "url": "https://www.bilibili.com/video/BV19rGE6gEw6",
+        "metrics": "播放 2799 / 评论 94 / 点赞 47 / 转发 5 / 收藏 4",
+        "sampleComments": 3,
+        "note": ""
+      },
+      {
+        "platform": "微博",
+        "sourceType": "官方微博",
+        "title": "5月22《关于近期问题的说明》官方微博",
+        "url": "https://m.weibo.cn/status/5301315922038157",
+        "metrics": "评论 2 / 点赞 0 / 转发 0",
+        "sampleComments": 1,
+        "note": ""
+      },
+      {
+        "platform": "TapTap",
+        "sourceType": "游戏评价页",
+        "title": "洛克王国：世界 - TapTap评价",
+        "url": "https://www.taptap.cn/app/188212/review",
+        "metrics": "评分 4.8 / 评价数 76647",
+        "sampleComments": 50,
+        "note": ""
+      }
+    ],
+    "quotes": [
+      {
+        "theme": "道歉不信任",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 20:42:09",
+        "score": "",
+        "like": 16827,
+        "reply": 566,
+        "text": "我真的很想相信你",
+        "analysis": "信任仍有修复窗口，但玩家要求官方继续兑现。"
+      },
+      {
+        "theme": "道歉不信任",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 21:00:55",
+        "score": "",
+        "like": 5195,
+        "reply": 54,
+        "text": "好吧，我接受了，但是还没有原谅你哦",
+        "analysis": "补偿和公开信让玩家接受处理，但没有直接恢复信任。"
+      },
+      {
+        "theme": "道歉不信任",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 21:07:22",
+        "score": "",
+        "like": 2017,
+        "reply": 82,
+        "text": "技术问题可以原谅，立场问题不容模糊。",
+        "analysis": "玩家把事故区分为技术问题和立场/价值判断问题。"
+      },
+      {
+        "theme": "回滚诉求",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 20:45:33",
+        "score": "",
+        "like": 480,
+        "reply": 33,
+        "text": "先回调动作，再谈自定义1",
+        "analysis": "玩家认为优先级应是先回退争议改动，再讨论共存方案。"
+      },
+      {
+        "theme": "回滚诉求",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 20:37:31",
+        "score": "",
+        "like": 319,
+        "reply": 42,
+        "text": "为什么动作不回调？",
+        "analysis": "具体诉求从补偿转向“动作是否恢复”。"
+      },
+      {
+        "theme": "回滚诉求",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 20:36:51",
+        "score": "",
+        "like": 1952,
+        "reply": 402,
+        "text": "你非得自定义动作？回退会怎么样",
+        "analysis": "自定义被部分玩家理解为折中、拖延或保留争议改动。"
+      },
+      {
+        "theme": "玩家代表性/立场疑虑",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 20:39:38",
+        "score": "",
+        "like": 4326,
+        "reply": 273,
+        "text": "最让玩家愤怒的，不是改动作这件事本身，而是你们迎合某些极端群体的态度",
+        "analysis": "争议从功能调整扩展到“官方听谁的声音”。"
+      },
+      {
+        "theme": "信任观察",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 20:33:01",
+        "score": "",
+        "like": 3632,
+        "reply": 108,
+        "text": "你最好是真的听进去了",
+        "analysis": "玩家愿意观察，但要求后续行动证明。"
+      },
+      {
+        "theme": "资产/养成损失",
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "sourceTitle": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "sourceUrl": "https://www.bilibili.com/opus/1205972893407641606",
+        "time": "2026-05-24 20:36:19",
+        "score": "",
+        "like": 330,
+        "reply": 12,
+        "text": "精灵经历怎么没有了？公告里没看见啊",
+        "analysis": "玩家把精灵经历等细节视为已上线内容资产。"
+      },
+      {
+        "platform": "TapTap",
+        "sourceType": "热门评价",
+        "sourceTitle": "TapTap热门评价",
+        "sourceUrl": "https://www.taptap.cn/review/48806369",
+        "time": "2026-05-24",
+        "score": "1",
+        "like": 727,
+        "reply": 0,
+        "text": "洛克王国算是童年我花时间最多的一个游戏……最后呢？一波巨大的暴雷，真厉害啊。……你不是你了，你是洛克王国世界……但总之你不是洛克王国。",
+        "theme": "情感资产受损",
+        "analysis": "这条长评体现了IP情感资产被破坏后的“失望—伤心—切割”过程。"
+      },
+      {
+        "platform": "微博",
+        "sourceType": "官方说明相关微博评论",
+        "sourceTitle": "5月22《关于近期问题的说明》相关微博",
+        "sourceUrl": "https://m.weibo.cn/status/5301315922038157",
+        "time": "2026-05-22",
+        "score": "",
+        "like": 0,
+        "reply": 0,
+        "text": "动作自定义啥时候上线？",
+        "theme": "官方微博评论",
+        "analysis": "微博侧可见玩家把诉求压缩成“动作自定义/回调什么时候兑现”。"
+      }
+    ],
+    "platformCaveats": [
+      "B站：已并入此前实采的564条热门评论样本；仍不是全量评论。B站是当前最可靠的一手玩家反馈来源。",
+      "微博：可读取公开微博正文和热门评论，但5月22官方原帖ID仍需进一步定位；目前用微博热门页和转述页辅助记录官方微博热度。",
+      "TapTap：可获取热门评价样本、评分和评价数；评分历史曲线仍需后续用定期快照或第三方数据补齐。",
+      "小红书：本轮暂不自动抓取，后续建议通过公开笔记截图、人工抽样或专门授权方案解决。"
+    ],
+    "analysis": "玩家反馈证据显示，舆情不是单点动作争议，而是沿着“发现暗改—质疑回应—要求回滚—观察是否兑现—重新判断信任”的路径演化。B站官方公告评论区承担了最强的一手情绪反馈，TapTap长评更能呈现情怀/IP玩家的情感切割。"
+  }
 }

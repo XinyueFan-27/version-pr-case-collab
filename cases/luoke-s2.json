@@ -681,7 +681,11 @@
         {
           "type": "来源",
           "text": "S2赛季前瞻与平衡调整信息释放后，PVP/PVE玩家开始讨论主力精灵投入、回溯范围、PVE是否受影响。",
-          "url": "https://new.qq.com/rain/a/20260523A0007600"
+          "url": "https://new.qq.com/rain/a/20260523A0007600",
+          "platform": "腾讯新闻",
+          "sourceTitle": "S2危机复盘",
+          "time": "2026-05-23",
+          "sourceType": "媒体/社区来源"
         }
       ]
     },
@@ -697,7 +701,11 @@
         {
           "type": "来源",
           "text": "玩家侧复盘集中指向女洛克战败动作、炼金动作、奇丽花骑乘姿势、精灵表情/生态等未公告变化。",
-          "url": "https://news.17173.com/content/05222026/140353854.shtml"
+          "url": "https://news.17173.com/content/05222026/140353854.shtml",
+          "platform": "17173",
+          "sourceTitle": "暗改风波报道",
+          "time": "2026-05-22",
+          "sourceType": "媒体/社区来源"
         }
       ]
     },
@@ -714,18 +722,30 @@
           "type": "玩家原话",
           "text": "先回调动作，再谈自定义1",
           "url": "https://www.bilibili.com/opus/1205972893407641606",
-          "heat": "480赞 / 33回复"
+          "heat": "480赞 / 33回复",
+          "platform": "B站",
+          "sourceTitle": "官方动态：《近期调整与更新内容公告》",
+          "time": "2026-05-24",
+          "sourceType": "官方动态评论"
         },
         {
           "type": "玩家原话",
           "text": "为什么动作不回调？",
           "url": "https://www.bilibili.com/opus/1205972893407641606",
-          "heat": "319赞 / 42回复"
+          "heat": "319赞 / 42回复",
+          "platform": "B站",
+          "sourceTitle": "官方动态：《近期调整与更新内容公告》",
+          "time": "2026-05-24",
+          "sourceType": "官方动态评论"
         },
         {
           "type": "微博评论",
           "text": "动作自定义啥时候上线？",
-          "url": "https://m.weibo.cn/status/5301315922038157"
+          "url": "https://m.weibo.cn/status/5301315922038157",
+          "platform": "微博",
+          "sourceTitle": "5月22《关于近期问题的说明》相关微博",
+          "time": "2026-05-22",
+          "sourceType": "微博评论"
         }
       ]
     },
@@ -742,13 +762,21 @@
           "type": "玩家原话",
           "text": "最让玩家愤怒的，不是改动作这件事本身，而是你们迎合某些极端群体的态度",
           "url": "https://www.bilibili.com/opus/1205972893407641606",
-          "heat": "4326赞 / 273回复"
+          "heat": "4326赞 / 273回复",
+          "platform": "B站",
+          "sourceTitle": "官方动态：《近期调整与更新内容公告》",
+          "time": "2026-05-24",
+          "sourceType": "官方动态评论"
         },
         {
           "type": "玩家原话",
           "text": "精灵经历怎么没有了？公告里没看见啊",
           "url": "https://www.bilibili.com/opus/1205972893407641606",
-          "heat": "330赞 / 12回复"
+          "heat": "330赞 / 12回复",
+          "platform": "B站",
+          "sourceTitle": "官方动态：《近期调整与更新内容公告》",
+          "time": "2026-05-24",
+          "sourceType": "官方动态评论"
         }
       ]
     },
@@ -765,19 +793,31 @@
           "type": "玩家原话",
           "text": "我真的很想相信你",
           "url": "https://www.bilibili.com/opus/1205972893407641606",
-          "heat": "16827赞 / 566回复"
+          "heat": "16827赞 / 566回复",
+          "platform": "B站",
+          "sourceTitle": "官方动态：《近期调整与更新内容公告》",
+          "time": "2026-05-24",
+          "sourceType": "官方动态评论"
         },
         {
           "type": "玩家原话",
           "text": "好吧，我接受了，但是还没有原谅你哦",
           "url": "https://www.bilibili.com/opus/1205972893407641606",
-          "heat": "5195赞 / 54回复"
+          "heat": "5195赞 / 54回复",
+          "platform": "B站",
+          "sourceTitle": "官方动态：《近期调整与更新内容公告》",
+          "time": "2026-05-24",
+          "sourceType": "官方动态评论"
         },
         {
           "type": "玩家原话",
           "text": "你最好是真的听进去了",
           "url": "https://www.bilibili.com/opus/1205972893407641606",
-          "heat": "3632赞 / 108回复"
+          "heat": "3632赞 / 108回复",
+          "platform": "B站",
+          "sourceTitle": "官方动态：《近期调整与更新内容公告》",
+          "time": "2026-05-24",
+          "sourceType": "官方动态评论"
         }
       ]
     }

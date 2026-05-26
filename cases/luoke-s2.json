@@ -88,7 +88,11 @@
       "impact": "官方尝试用分类处理、补偿和后续方案止血。",
       "links": [
         {
-          "label": "5月22说明转载",
+          "label": "官方微博原文",
+          "url": "https://m.weibo.cn/status/5301315922038157"
+        },
+        {
+          "label": "公告原文转载",
           "url": "https://www.163.com/dy/article/KTI6ACU40511B8LM.html"
         }
       ]
@@ -140,7 +144,7 @@
       "impact": "官方从“概括道歉”转向“逐项列问题清单”。",
       "links": [
         {
-          "label": "5月24公告动态",
+          "label": "官方B站公告",
           "url": "https://www.bilibili.com/opus/1205972893407641606"
         }
       ]
@@ -166,8 +170,16 @@
       "impact": "公开信将叙事从阴谋论拉回原团队流程事故。",
       "links": [
         {
-          "label": "主策公开信",
+          "label": "开水公开信全文",
+          "url": "https://new.qq.com/rain/a/20260524A08ME000"
+        },
+        {
+          "label": "游戏葡萄转载全文",
           "url": "https://news.qq.com/rain/a/20260524A090XM00"
+        },
+        {
+          "label": "游戏内信件视频",
+          "url": "https://www.bilibili.com/video/BV19rGE6gEw6"
         }
       ]
     },
@@ -192,12 +204,12 @@
       "impact": "补偿提高了部分玩家的观察意愿。",
       "links": [
         {
-          "label": "补偿讨论视频",
-          "url": "https://www.bilibili.com/video/BV1rMGH68EKj"
-        },
-        {
           "label": "补偿报道",
           "url": "https://new.qq.com/rain/a/20260526A0006400"
+        },
+        {
+          "label": "补偿讨论视频",
+          "url": "https://www.bilibili.com/video/BV1rMGH68EKj"
         }
       ]
     },
@@ -222,8 +234,8 @@
       "impact": "后续治理承诺成为观察重点。",
       "links": [
         {
-          "label": "主策公开信",
-          "url": "https://news.qq.com/rain/a/20260524A090XM00"
+          "label": "开水公开信承诺",
+          "url": "https://new.qq.com/rain/a/20260524A08ME000"
         }
       ]
     },
@@ -354,29 +366,29 @@
   ],
   "sourceNotes": [
     {
-      "name": "B站官方5月24《近期调整与更新内容公告》",
+      "name": "官方微博：5月22《关于近期问题的说明》",
+      "url": "https://m.weibo.cn/status/5301315922038157",
+      "usage": "5月22首次官方道歉/说明的一手公开内容"
+    },
+    {
+      "name": "B站官方：5月24《近期调整与更新内容公告》",
       "url": "https://www.bilibili.com/opus/1205972893407641606",
-      "usage": "实采互动数据、评论样本、官方逐项修复清单"
+      "usage": "5月24官方逐项修复清单、实采互动数据和评论样本"
     },
     {
-      "name": "腾讯新闻/游戏葡萄：主策开水公开信",
+      "name": "开水的一封信全文",
+      "url": "https://new.qq.com/rain/a/20260524A08ME000",
+      "usage": "主策划公开信全文；用于事故原因、后续计划和团队回应"
+    },
+    {
+      "name": "游戏葡萄：主策公开信与复盘",
       "url": "https://news.qq.com/rain/a/20260524A090XM00",
-      "usage": "公开信原文、事故原因、后续计划与补偿"
-    },
-    {
-      "name": "网易/IT之家转载：5月22《关于近期问题的说明》",
-      "url": "https://www.163.com/dy/article/KTI6ACU40511B8LM.html",
-      "usage": "首次道歉内容、两类改动处理、2个棱镜球补偿"
+      "usage": "公开信全文转载、补充舆情背景和版本事故解释"
     },
     {
       "name": "36Kr复盘",
       "url": "https://36kr.com/p/3824577339101569",
       "usage": "暗改范围、评论量报道口径、团队换血传言"
-    },
-    {
-      "name": "17173报道",
-      "url": "https://news.17173.com/content/05222026/140353854.shtml",
-      "usage": "首次道歉为何被质疑、玩家真实反应"
     },
     {
       "name": "B站玩家视频：是否原谅官方",

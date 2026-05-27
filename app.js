@@ -98,6 +98,13 @@ init().catch(err=>{
 
 
 
+
+function renderGenderConflict(c){
+  const g=c.genderConflictAnalysis;
+  if(!g) return '';
+  return `<section class="genderModule"><h4>${g.title}</h4><p>${g.summary}</p><div class="genderChain">${(g.chain||[]).map(x=>`<article><b>${x.label}</b><span>${x.text}</span></article>`).join('')}</div><div class="genderTakeaway">${g.keyTakeaway}</div><div class="genderEvidence"><h5>关键证据</h5>${(g.evidence||[]).map(e=>`<a target="_blank" href="${e.url}" class="commentShot"><div class="commentShotTop"><span class="avatar">${(e.platform||'评').slice(0,1)}</span><div><b>${e.playerId||'公开来源'}</b><small>${[e.platform,e.time,e.sourceType].filter(Boolean).join('｜')}</small></div></div><div class="commentShotText">${e.text}</div><div class="commentShotFoot"><span>${e.heat||''}</span><span>查看来源</span></div></a>`).join('')}</div></section>`;
+}
+
 function renderDemandFunnel(c){
   const f=c.playerDemandFunnel||{};
   if(!f.surface&&!f.middle&&!f.deep) return '';
@@ -117,7 +124,7 @@ function renderFeedback(c){
 
 
 function renderPlayerJourney(c){
-  return `<div class="analysisBox fullWidth"><h3>玩家心路历程与诉求</h3><p class="muted">这一页只回答一个问题：玩家情绪为什么一步步升级，又为什么在公开信后只是部分回落。结论性认知放在“案例启发”页，这里聚焦阶段、诉求和证据。</p>${renderJourneyStages(c)}${renderDemandFunnel(c)}<h4>真实损失不是单点功能损失</h4><table class="table"><tr><th>损失类型</th><th>本案体现</th></tr>${c.losses.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td></tr>`).join('')}</table></div>`;
+  return `<div class="analysisBox fullWidth"><h3>玩家心路历程与诉求</h3><p class="muted">这一页只回答一个问题：玩家情绪为什么一步步升级，又为什么在公开信后只是部分回落。结论性认知放在“案例启发”页，这里聚焦阶段、诉求和证据。</p>${renderJourneyStages(c)}${renderGenderConflict(c)}${renderDemandFunnel(c)}<h4>真实损失不是单点功能损失</h4><table class="table"><tr><th>损失类型</th><th>本案体现</th></tr>${c.losses.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td></tr>`).join('')}</table></div>`;
 }
 
 

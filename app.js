@@ -123,7 +123,7 @@ function renderJourneyStages(c){
 
 
 function renderEmotionLineChart(stages){
-  const W=920,H=300,padL=56,padR=28,padT=28,padB=76;
+  const W=1040,H=360,padL=58,padR=32,padT=34,padB=106;
   const innerW=W-padL-padR,innerH=H-padT-padB;
   const x=i=>padL+(stages.length===1?innerW/2:(innerW*i/(stages.length-1)));
   const y=v=>padT+innerH-(Math.max(0,Math.min(100,v))/100)*innerH;
@@ -137,6 +137,25 @@ function renderEmotionLineChart(stages){
     <text x="18" y="${padT+innerH/2}" class="axisTitle" transform="rotate(-90 18 ${padT+innerH/2})">玩家情绪强度</text>
     <polygon points="${area}" fill="url(#emotionArea)"/>
     <polyline points="${points}" class="emotionLine" fill="none"/>
-    ${stages.map((s,i)=>`<g class="point"><line x1="${x(i)}" y1="${y(s.emotionScore)}" x2="${x(i)}" y2="${padT+innerH}" class="guide"/><circle cx="${x(i)}" cy="${y(s.emotionScore)}" r="6"/><text x="${x(i)}" y="${y(s.emotionScore)-12}" class="score" text-anchor="middle">${s.emotionScore}</text><text x="${x(i)}" y="${padT+innerH+24}" class="stageLabel" text-anchor="middle">阶段${i+1}</text><text x="${x(i)}" y="${padT+innerH+43}" class="stageTime" text-anchor="middle">${s.time.split('/')[0].trim()}</text></g>`).join('')}
-  </svg><div class="chartLegend">${stages.map((s,i)=>`<span><b>${i+1}</b>${s.stage.replace(/^阶段[一二三四五六七八九十]+：/,'')}</span>`).join('')}</div></div>`;
+    ${stages.map((s,i)=>`<g class="point"><line x1="${x(i)}" y1="${y(s.emotionScore)}" x2="${x(i)}" y2="${padT+innerH}" class="guide"/><circle cx="${x(i)}" cy="${y(s.emotionScore)}" r="6"/><text x="${x(i)}" y="${y(s.emotionScore)-12}" class="score" text-anchor="middle">${s.emotionScore}</text>${renderChartStageCallout(s,i,x(i),y(s.emotionScore),padT,padT+innerH)}<text x="${x(i)}" y="${padT+innerH+28}" class="stageLabel" text-anchor="middle">阶段${i+1}</text><text x="${x(i)}" y="${padT+innerH+48}" class="stageTime" text-anchor="middle">${s.time.split('/')[0].trim()}</text></g>`).join('')}
+  </svg><div class="chartLegend">${stages.map((s,i)=>`<span><b>${i+1}</b>${chartStageLabel(s.stage).join('，')}</span>`).join('')}</div></div>`;
+}
+
+
+function chartStageLabel(stage){
+  const raw=stage.replace(/^阶段[一二三四五六七八九十]+：/,'');
+  const map={
+    '预期升高，但旧账已在积累':['预期升高','旧账积累'],
+    '发现异常，快速定性为“暗改”':['发现异常','定性暗改'],
+    '首次道歉失败，诉求从补偿转向回滚和解释':['首次道歉失败','转向回滚解释'],
+    '问题扩大，变成版本管理与玩家代表性危机':['问题扩大','版本管理/代表性危机'],
+    '公开信与补偿后，进入“接受处理但未原谅”':['公开信与补偿后','接受处理但未原谅']
+  };
+  return map[raw] || raw.split(/[，、]/).filter(Boolean).slice(0,2);
+}
+function renderChartStageCallout(stage,index,cx,cy,top,bottom){
+  const lines=chartStageLabel(stage.stage);
+  const below=stage.emotionScore>=75;
+  const labelY=below?Math.min(bottom-84,cy+34):Math.max(top+18,cy-44);
+  return `<text x="${cx}" y="${labelY}" class="chartCallout" text-anchor="middle">${lines.map((line,j)=>`<tspan x="${cx}" dy="${j?15:0}">${line}</tspan>`).join('')}</text>`;
 }

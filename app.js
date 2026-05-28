@@ -87,7 +87,7 @@ function tab(id){
 function renderTab(c,id){
   if(id==='timeline')return `<div class="block"><h3>T-window 时间线</h3><div class="timeline">${c.timeline.map(e=>`<div class="event ${e.side}"><div class="time"><span class="side">${e.side==='official'?'官方动作':'玩家动作'}</span>${e.phase} / ${e.time}</div><div class="name">${e.event}</div><div class="impact">${e.impact}</div>${e.links&&e.links.length?`<div class="eventLinks"><span>来源</span>${e.links.map(l=>`<a target="_blank" href="${l.url}">${l.label}</a>`).join('')}</div>`:''}</div>`).join('')}</div></div><div class="block"><h3>T-window记录规则</h3><p class="muted">所有官方单独动作都要拆开：前瞻、上线/热更新、首次回应、修复/回滚、高层公开信、补偿加码、后续机制承诺均单列。玩家侧反应、扒改动、质疑、翻旧账、是否原谅等也要单列到玩家动作侧，不能写在官方动作卡片里。</p></div>`;
   if(id==='players')return renderPlayerJourney(c);
-  if(id==='official')return `<div class="block"><h3>官方处置复盘</h3><p class="muted">这次官方处置可以分成两个阶段看：5月22日第一次回应负责“止血”，但没有解释清楚为什么暗改、为什么不直接回退，因此被认为避重就轻；5月24日主策公开信才真正开始回答“为什么发生、谁负责、后续机制怎么改”，所以才让部分玩家愿意继续观察。</p><h4>第一次回应为何失败</h4><table class="table"><tr><th>玩家真正关心</th><th>首次回应</th><th>为什么不买账</th></tr>${c.responseFail.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('')}</table><h4>官方做对了什么</h4><ul>${c.officialRight.map(x=>`<li>${x}</li>`).join('')}</ul><h4>官方做错了什么</h4><ul>${c.officialWrong.map(x=>`<li>${x}</li>`).join('')}</ul><div class="quote">核心判断：官方后续的主策公开信和补偿加码确实改善了一部分玩家情绪，但第一次回应没有接住玩家真正的不满，导致舆情从“动作争议”继续升级为“信任与解释权危机”。</div></div>`;
+  if(id==='official')return renderOfficialResponse(c);
   if(id==='data')return `<div class="grid2"><div><div class="block"><h3>B站高赞评论</h3><table class="table"><tr><th>评论</th><th>点赞</th><th>反映心态</th></tr>${c.quotes.map(q=>`<tr><td>${q[0]}</td><td>${q[1]}</td><td>${q[2]}</td></tr>`).join('')}</table></div></div><aside><div class="block"><h3>声量-伤害矩阵</h3><div class="matrix"><div><b>声量</b><p>${c.volume}</p></div><div><b>伤害</b><p>${c.damage}</p></div><div><b>状态</b><p>${c.status}</p></div><div><b>样本</b><p>674条热门评论</p></div></div></div><div class="block source"><h3>来源</h3>${(c.sourceNotes||[]).map(s=>`<div class="sourceItem"><a target="_blank" href="${s.url}">${s.name}</a><p>${s.usage}</p></div>`).join('')||c.sources.map(x=>`<a target="_blank" href="${x}">${x}</a>`).join('')}</div></aside></div>`;
   if(id==='insight')return `<div class="block"><h3>案例启发：玩家认知变化与未来治理</h3><p class="muted">这里承接玩家心路历程，提炼可迁移的认知变化和治理启发。</p>${c.cognitionConclusions?`<h4>玩家认知结论</h4><div class="conclusionGrid">${c.cognitionConclusions.map(x=>`<article><b>${x.title}</b><p>${x.text}</p></article>`).join('')}</div>`:''}<h4>玩家认知变化</h4>${c.cognition.map(x=>`<div class="quote">${x}</div>`).join('')}<h4>被破坏的默认契约</h4><div class="chips">${c.tags.map(t=>`<span class="chip">${t}</span>`).join('')}</div><h4>未来启发与治理清单</h4><ul>${c.lessons.map(x=>`<li>${x}</li>`).join('')}</ul>${c.templateValue?`<h4>作为样板案例的价值</h4><table class="table"><tr><th>分析点</th><th>价值</th></tr>${c.templateValue.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td></tr>`).join('')}</table>`:''}<div class="quote">核心判断：本案的启发不是“动作不要改”，而是任何会影响已上线内容、情感资产和玩家解释权的调整，都必须前置公告、说明决策链，并优先准备共存方案。</div></div>`;
 }
@@ -99,6 +99,15 @@ init().catch(err=>{
 
 
 
+
+
+function renderOfficialResponse(c){
+  const d=c.officialResponseDeepDive;
+  if(!d){
+    return `<div class="block"><h3>官方处置复盘</h3><p class="muted">暂无深度复盘数据。</p></div>`;
+  }
+  return `<div class="officialDeep"><section class="block officialIntro"><h3>官方处置复盘：哪些回应有价值，哪些没有接住问题</h3><p>${d.summary}</p><div class="officialJudgement">${d.keyJudgement}</div></section><section class="officialStages">${(d.stages||[]).map((s,i)=>`<article class="officialStage"><div class="officialStageHead"><span>回应${i+1}</span><div><h4>${s.name}</h4><p>${s.time}｜${s.source}</p></div><em>${s.value}</em></div><div class="officialQuoteBlock"><b>官方原文/要点摘录</b>${(s.officialExcerpt||[]).map(x=>`<p>“${x}”</p>`).join('')}</div><div class="officialValueGrid"><section><h5>真正有价值的部分</h5><ul>${(s.valuable||[]).map(x=>`<li>${x}</li>`).join('')}</ul></section><section><h5>低价值或未回答的部分</h5><ul>${(s.lowValue||[]).map(x=>`<li>${x}</li>`).join('')}</ul></section></div><div class="officialEffect"><b>实际效果：</b>${s.effect}</div></article>`).join('')}</section><section class="block"><h4>回应价值分层</h4><table class="table"><tr><th>回应</th><th>判断</th><th>原因</th></tr>${(d.valueMatrix||[]).map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('')}</table></section><section class="block"><h4>为什么主策公开信 + 补偿才真正安抚到玩家</h4><ul>${(d.whyWorked||[]).map(x=>`<li>${x}</li>`).join('')}</ul><div class="quote">平衡判断：Kiki 说“开水出来回应 + 道歉信诚恳 + 送东西诚意足”是对的，但这不是全部。真正有效的是这三者背后补上了责任承担、事故解释、修复清单和制度承诺；如果只有补偿，没有这些解释，玩家仍会把它理解为用福利换沉默。</div></section></div>`;
+}
 
 function renderEvidenceCard(e){
   const identity=e.playerId||e.playerName||'公开评论用户';

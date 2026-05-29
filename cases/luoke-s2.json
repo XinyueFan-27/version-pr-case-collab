@@ -1153,5 +1153,261 @@
       "补偿力度足，让玩家感到官方确实承认事故严重。",
       "但玩家仍处在观察期，因为动作决策来源、社区代表性和流程整改节点仍未完全透明。"
     ]
+  },
+  "impactQuantification": {
+    "summary": "影响量化不再只看评论数，而是拆成“声量规模、平台扩散、情绪/行动信号、伤害维度、数据缺口”五层。当前最可靠的是B站5月24官方动态和已采评论样本；微博、5月22首次道歉动态评论量、收入/评分曲线仍需继续补证。",
+    "dataPrinciple": [
+      "已核验：来自官方动态页面、B站视频公开数据、TapTap评价页和本轮实采评论样本。",
+      "样本口径：B站674条热门评论样本、B站/微博/TapTap共652条去重玩家反馈样本，不代表全量评论。",
+      "媒体口径：评论量、补偿价值、收入影响等非原平台直接抓取数据，一律标注为“待核验/媒体口径”。",
+      "解释原则：高声量不等于高伤害，需结合情绪强度、行动信号和长期信任损伤判断。"
+    ],
+    "topMetrics": [
+      {
+        "label": "B站官方公告评论",
+        "value": "35,463",
+        "note": "5月24《近期调整与更新内容公告》，已核验公开页面"
+      },
+      {
+        "label": "B站官方公告点赞",
+        "value": "14,715",
+        "note": "同时有转发860，说明官方回应本身成为二次传播节点"
+      },
+      {
+        "label": "B站热门评论样本",
+        "value": "674",
+        "note": "覆盖官方动态与多个玩家视频，属于热门样本"
+      },
+      {
+        "label": "跨平台去重反馈",
+        "value": "652",
+        "note": "B站/微博/TapTap公开样本，含人工精选原话"
+      },
+      {
+        "label": "TapTap评分/评价数",
+        "value": "4.8 / 76,647",
+        "note": "当前快照，缺少历史评分曲线"
+      },
+      {
+        "label": "声量等级 / 伤害等级",
+        "value": "S / A-S",
+        "note": "声量高，伤害集中在信任、社区与版本治理"
+      }
+    ],
+    "platformSignals": [
+      {
+        "platform": "B站",
+        "sourceType": "玩家/官方视频",
+        "title": "BV18DL86yE9N",
+        "url": "https://www.bilibili.com/video/BV18DL86yE9N",
+        "metrics": "公开页面可访问，量化字段待补",
+        "sampleComments": 0,
+        "note": "{'code': -404, 'message': '啥都木有', 'ttl': 1}"
+      },
+      {
+        "platform": "B站",
+        "sourceType": "官方动态",
+        "title": "《洛克王国：世界》近期调整与更新内容公告 - 哔哩哔哩",
+        "url": "https://www.bilibili.com/opus/1205972893407641606",
+        "metrics": "评论 35463 / 点赞 14715 / 转发 860",
+        "sampleComments": 300,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "【洛克王国世界】S2赛季官方暗改合集！！！洛克官方简直疯了！！暗改女洛克鸭子坐！！希望官方认真对待！！！",
+        "url": "https://www.bilibili.com/video/BV1v3Li6vEHc",
+        "metrics": "播放 23380 / 评论 396 / 点赞 560 / 转发 196 / 收藏 69",
+        "sampleComments": 3,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "【洛克王国】woc！策划道歉了？！对于s2赛季动作暗改问题，回溯功能，精灵养成材料获取与减负问题回应！补偿2个棱镜球？！！",
+        "url": "https://www.bilibili.com/video/BV1EaL86oEBJ",
+        "metrics": "播放 84889 / 评论 272 / 点赞 250 / 转发 15 / 收藏 17",
+        "sampleComments": 98,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "洛克王国世界官方深夜发布致歉声明",
+        "url": "https://www.bilibili.com/video/BV1qgLi6KEMD",
+        "metrics": "播放 186 / 评论 0 / 点赞 3 / 转发 0 / 收藏 0",
+        "sampleComments": 0,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "价值千元的补偿 洛克王国世界S2更新事故 补偿及修复公告 来自开水策划的道歉",
+        "url": "https://www.bilibili.com/video/BV1hhGH6yEKX",
+        "metrics": "播放 188 / 评论 0 / 点赞 3 / 转发 0 / 收藏 1",
+        "sampleComments": 0,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "【洛克王国世界】官方补偿了11个棱镜球！！我们到底要不要原谅官方？？？为啥策划致歉了很多小洛克还是不接受？？",
+        "url": "https://www.bilibili.com/video/BV1rMGH68EKj",
+        "metrics": "播放 23375 / 评论 617 / 点赞 301 / 转发 19 / 收藏 51",
+        "sampleComments": 160,
+        "note": ""
+      },
+      {
+        "platform": "B站",
+        "sourceType": "玩家视频",
+        "title": "开水老师策划给洛克王国世界玩家们的一封信",
+        "url": "https://www.bilibili.com/video/BV19rGE6gEw6",
+        "metrics": "播放 2799 / 评论 94 / 点赞 47 / 转发 5 / 收藏 4",
+        "sampleComments": 3,
+        "note": ""
+      },
+      {
+        "platform": "微博",
+        "sourceType": "官方微博",
+        "title": "5月22《关于近期问题的说明》官方微博",
+        "url": "https://m.weibo.cn/status/5301315922038157",
+        "metrics": "评论 2 / 点赞 0 / 转发 0",
+        "sampleComments": 1,
+        "note": ""
+      },
+      {
+        "platform": "TapTap",
+        "sourceType": "游戏评价页",
+        "title": "洛克王国：世界 - TapTap评价",
+        "url": "https://www.taptap.cn/app/188212/review",
+        "metrics": "评分 4.8 / 评价数 76647",
+        "sampleComments": 50,
+        "note": ""
+      }
+    ],
+    "timelineSignals": [
+      {
+        "phase": "T0-T+1",
+        "signal": "发现暗改与首次回应",
+        "metric": "5月22玩家视频播放84,889 / 评论272 / 样本98",
+        "meaning": "玩家在官方首次说明前后已经形成“暗改+不信任”的讨论框架。"
+      },
+      {
+        "phase": "T+3",
+        "signal": "官方公告成为主战场",
+        "metric": "B站官方动态评论35,463 / 点赞14,715",
+        "meaning": "真正高声量集中在5月24官方修复公告与公开信节点，说明玩家等待官方给出解释。"
+      },
+      {
+        "phase": "T+3后",
+        "signal": "是否原谅进入二次讨论",
+        "metric": "“是否原谅官方”玩家视频播放23,375 / 评论617 / 样本160",
+        "meaning": "公开信和补偿后，舆论从单纯冲突转向“接受但未原谅”。"
+      },
+      {
+        "phase": "跨平台",
+        "signal": "TapTap长评承载情感资产损失",
+        "metric": "TapTap评分4.8 / 评价76,647 / 本轮样本50",
+        "meaning": "TapTap评论更适合观察情怀玩家、IP玩家和长线体验损失。"
+      }
+    ],
+    "damageDimensions": [
+      {
+        "dimension": "声量冲击",
+        "level": "S",
+        "evidence": "B站官方动态评论超3.5万，相关玩家视频评论继续扩散。",
+        "interpretation": "高声量，但并非所有声量都转化为商业损失；更像一次集中舆情爆发。"
+      },
+      {
+        "dimension": "信任伤害",
+        "level": "S",
+        "evidence": "“我真的很想相信你”“接受但未原谅”等高赞评论。",
+        "interpretation": "核心伤害是玩家对官方公示、版本管理和后续兑现的信任下降。"
+      },
+      {
+        "dimension": "社区撕裂",
+        "level": "A/S",
+        "evidence": "性别议题、小红书/微博反馈、超话管理争议被玩家纳入解释链。",
+        "interpretation": "舆情从产品争议升级为玩家代表性争夺，社区治理难度升高。"
+      },
+      {
+        "dimension": "版本治理质疑",
+        "level": "A/S",
+        "evidence": "S1修复内容疑似未合入S2、资源/生态/表情问题被集中扒出。",
+        "interpretation": "玩家质疑项目组是否具备大DAU长线版本治理能力。"
+      },
+      {
+        "dimension": "商业/评分影响",
+        "level": "待核验",
+        "evidence": "当前仅有TapTap评分快照与媒体讨论，缺少连续评分、流水、留存数据。",
+        "interpretation": "不能直接下商业损失结论，需要后续数据补齐。"
+      }
+    ],
+    "sentimentActions": [
+      {
+        "type": "高赞情绪",
+        "signal": "接受但未原谅",
+        "examples": [
+          "我真的很想相信你",
+          "好吧，我接受了，但是还没有原谅你哦",
+          "你最好是真的听进去了"
+        ]
+      },
+      {
+        "type": "诉求行动",
+        "signal": "要求回滚/解释/直播说清楚",
+        "examples": [
+          "不先回退动作，玩家信任他求不回来",
+          "希望直播能讲清楚",
+          "为什么动作不回调？"
+        ]
+      },
+      {
+        "type": "代表性冲突",
+        "signal": "质疑官方听取谁的声音",
+        "examples": [
+          "小红书的意见比B站重要",
+          "迎合某些极端群体的态度",
+          "立场问题不容模糊"
+        ]
+      },
+      {
+        "type": "观察窗口",
+        "signal": "补偿和公开信带来缓和但非原谅",
+        "examples": [
+          "公告真的看哭了，希望越来越好",
+          "知错就改就很棒",
+          "礼物先收了，原不原谅之后看直播"
+        ]
+      }
+    ],
+    "dataGaps": [
+      {
+        "gap": "5月22首次道歉原动态评论量",
+        "status": "待定位原始动态ID",
+        "next": "继续定位官方微博/B站/社区原帖，避免使用媒体转述口径。"
+      },
+      {
+        "gap": "评分变化曲线",
+        "status": "缺少时间序列",
+        "next": "对TapTap、App Store等评分做日级快照，区分短期情绪和长期口碑。"
+      },
+      {
+        "gap": "商业影响",
+        "status": "不可直接判断",
+        "next": "需要流水、下载、DAU、留存或第三方榜单连续数据。"
+      },
+      {
+        "gap": "微博/小红书性别议题样本",
+        "status": "样本不足",
+        "next": "后续应补充公开帖子截图/评论抽样，标注平台与时间。"
+      },
+      {
+        "gap": "评论情绪全量分布",
+        "status": "当前为热门样本",
+        "next": "若平台允许，扩展为时间分页抽样，避免只看高赞评论。"
+      }
+    ]
   }
 }

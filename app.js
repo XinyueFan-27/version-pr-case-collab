@@ -39,8 +39,13 @@ function filtered(){
 }
 
 function renderStats(){
-  const samples=caseSummaries.length===1?'674':'--';
-  $('stats').innerHTML=`<div class="stat"><b>${caseSummaries.length}</b><span>当前展示案例</span></div><div class="stat"><b>S</b><span>声量等级</span></div><div class="stat"><b>${samples}</b><span>B站评论样本</span></div><div class="stat"><b>5</b><span>分析模块</span></div>`;
+  const list = filtered();
+  const totalSamples = list.reduce((acc, c) => {
+    if (c.id === 'luoke-s2') return acc + 674;
+    if (c.id === 'sanjiaozhou-jail') return acc + 200; // approximate validated sample comments for Delta
+    return acc;
+  }, 0);
+  $('stats').innerHTML=`<div class="stat"><b>${caseSummaries.length}</b><span>当前展示案例</span></div><div class="stat"><b>S</b><span>最高声量</span></div><div class="stat"><b>${totalSamples || '--'}</b><span>已校回评样本</span></div><div class="stat"><b>5</b><span>分析维度页签</span></div>`;
 }
 
 function renderGrid(){

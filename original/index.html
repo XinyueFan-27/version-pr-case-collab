@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>游戏版本舆情案例库</title>
+  <link rel="stylesheet" href="./style.css?v=20260608-1205" />
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>游戏版本舆情案例库</h1>
+        <div class="sub">双样板案例：洛克王国：世界 S2 ｜ 三角洲行动 共享监狱</div>
+      </div>
+    </div>
+    <div class="pill">Dashboard / case detail / H5</div>
+  </header>
+
+  <main id="dashboard">
+    <section class="hero">
+      <div class="card heroMain">
+        <h2>版本舆情案例Dashboard</h2>
+        <p>当前首页已接入两个已深挖样板案例（洛克王国 S2 / 三角洲共享监狱），用于验证信息架构、对比阅读体验与跨案例复盘逻辑。后续可继续按同一模板扩展更多案例。</p>
+        <div class="notice">筛选器与案例卡片均已支持多案例浏览；后续扩展时，只需要新增 cases/*.json 并更新 data/cases.json。</div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <section class="panel filters">
+      <div class="filterGrid">
+        <input id="q" class="control" placeholder="搜索案例、标签、厂商" />
+        <select id="market" class="control"><option value="">全部市场</option></select>
+        <select id="type" class="control"><option value="">全部类型</option></select>
+        <select id="cognition" class="control"><option value="">全部认知标签</option></select>
+      </div>
+    </section>
+
+    <div class="sectionTitle"><h2>案例格子</h2><div class="count" id="resultCount"></div></div>
+    <section class="caseGrid" id="caseGrid"></section>
+  </main>
+
+  <main id="detail" class="detail">
+    <button class="back" onclick="goHome()">返回Dashboard</button>
+    <section class="card detailHero" id="detailHero"></section>
+    <nav class="tabs" id="tabs"></nav>
+    <section id="tabContent"></section>
+  </main>
+</div>
+<script src="./app.js?v=20260608-1145"></script>
+</body>
+</html>

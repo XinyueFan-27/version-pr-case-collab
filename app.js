@@ -3,8 +3,8 @@ let currentCase=null;
 
 const $=id=>document.getElementById(id);
 const uniq=a=>[...new Set(a.filter(Boolean))].sort();
-const splitType=v=>(v||'').split('/').map(x=>x.trim()).filter(Boolean);
-const sevClass=v=>(v||'').includes('S')?'s':((v||'').includes('A')?'a':'s');
+const sevClass=v=>(v||'').includes('S')?'s':((v||'').includes('A')?'a':'b');
+const esc=s=>(s==null?'':String(s));
 
 async function loadJson(url){
   const res=await fetch(url,{cache:'no-store'});
@@ -21,38 +21,40 @@ async function init(){
 }
 
 function fillFilters(){
-  const groups=[['market',uniq(caseSummaries.map(c=>c.market))],['type',uniq(caseSummaries.flatMap(c=>splitType(c.type)))],['cognition',uniq(caseSummaries.flatMap(c=>c.tags||[]))]];
+  const groups=[
+    ['market',uniq(caseSummaries.map(c=>c.market))],
+    ['type',uniq(caseSummaries.flatMap(c=>(c.type||'').split('/').map(x=>x.trim()).filter(Boolean)))],
+    ['cognition',uniq(caseSummaries.flatMap(c=>c.tags||[]))]
+  ];
   groups.forEach(([id,items])=>{
-    const el=$(id);
+    const el=$(id); if(!el) return;
     items.forEach(x=>{const o=document.createElement('option');o.value=x;o.textContent=x;el.appendChild(o)});
   });
 }
 
-function bindFilters(){['q','market','type','cognition'].forEach(id=>$(id).addEventListener('input',renderGrid));}
+function bindFilters(){['q','market','type','cognition'].forEach(id=>{const el=$(id); if(el) el.addEventListener('input',renderGrid);});}
 
 function filtered(){
   const q=$('q').value.trim().toLowerCase(),m=$('market').value,t=$('type').value,cg=$('cognition').value;
   return caseSummaries.filter(c=>{
-    const hay=[c.title,c.game,c.company,c.market,c.type,c.summary,...(c.tags||[])].join(' ').toLowerCase();
-    return(!q||hay.includes(q))&&(!m||c.market===m)&&(!t||splitType(c.type).includes(t))&&(!cg||(c.tags||[]).includes(cg));
+    const hay=[c.title,c.game,c.company,c.market,c.type,c.gameType,c.playerEra,c.summary,...(c.tags||[])].join(' ').toLowerCase();
+    return(!q||hay.includes(q))&&(!m||c.market===m)&&(!t||(c.type||'').includes(t))&&(!cg||(c.tags||[]).includes(cg));
   });
 }
 
 function renderStats(){
-  const list = filtered();
-  const totalSamples = list.reduce((acc, c) => {
-    if (c.id === 'luoke-s2') return acc + 674;
-    if (c.id === 'sanjiaozhou-jail') return acc + 200; // approximate validated sample comments for Delta
-    return acc;
-  }, 0);
-  $('stats').innerHTML=`<div class="stat"><b>${caseSummaries.length}</b><span>当前展示案例</span></div><div class="stat"><b>S</b><span>最高声量</span></div><div class="stat"><b>${totalSamples || '--'}</b><span>已校回评样本</span></div><div class="stat"><b>5</b><span>分析维度页签</span></div>`;
+  $('stats').innerHTML=`<div class="stat"><b>${caseSummaries.length}</b><span>已收录案例</span></div><div class="stat"><b>0+5</b><span>分析结构</span></div><div class="stat"><b>v1.0</b><span>方法论版本</span></div><div class="stat"><b>3</b><span>分类维度</span></div>`;
 }
 
 function renderGrid(){
   renderStats();
   const list=filtered();
   $('resultCount').textContent=`${list.length} / ${caseSummaries.length} 个案例`;
-  $('caseGrid').innerHTML=list.map(c=>`<article class="card caseCard" onclick="openCase('${c.id}')"><div class="caseHead"><div><div class="caseTitle">${c.title}</div><div class="game">${c.game} / ${c.company}</div></div><span class="badge ${sevClass(c.damage)}">${c.damage}</span></div><div class="desc">${c.summary}</div><div class="chips">${(c.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')}</div><div class="foot"><span>${c.market}</span><span>${c.time}</span></div></article>`).join('');
+  const grade=v=>/^[SAB]$/.test(String(v||'').trim());
+  $('caseGrid').innerHTML=list.map(c=>{
+    const badges=[grade(c.volume)?`<span class="badge ${sevClass(c.volume)}">声量 ${esc(c.volume)}</span>`:'',grade(c.damage)?`<span class="badge ${sevClass(c.damage)}">伤害 ${esc(c.damage)}</span>`:''].join('');
+    return `<article class="card caseCard" onclick="openCase('${c.id}')"><div class="caseHead"><div><div class="caseTitle">${esc(c.title)}</div><div class="game">${esc(c.game)} / ${esc(c.company)}</div></div><div class="caseBadges">${badges}</div></div><div class="desc">${esc(c.summary||c.oneLine)}</div><div class="chips">${(c.tags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div><div class="foot"><span>${esc(c.market)}</span><span>${esc(c.time)}</span></div></article>`;
+  }).join('');
 }
 
 function openCase(id){location.hash=`case=${id}`;}
@@ -74,169 +76,184 @@ async function route(){
   }
 }
 
+const TABS=[['profile','游戏画像'],['recap','事件复盘'],['cause','原因追溯'],['official','官方处置'],['impact','影响效果'],['insight','案例启发']];
+
 function renderDetail(c){
-  $('detailHero').innerHTML=`<div class="sub">${c.game} / ${c.company}</div><h2>${c.title}</h2><p class="muted">${c.oneLine}</p><div class="meta"><span>${c.market}</span><span>${c.time}</span><span>${c.lifecycle}</span><span>声量 ${c.volume}</span><span>伤害 ${c.damage}</span><span>${c.status}</span></div>`;
-  const tabs=[['timeline','时间线'],['players','玩家心路历程'],['official','官方处置'],['data','影响量化'],['insight','案例启发']];
-  $('tabs').innerHTML=tabs.map((x,i)=>`<button class="tab ${i?'':'active'}" onclick="tab('${x[0]}')">${x[1]}</button>`).join('');
-  $('tabContent').innerHTML=tabs.map((x,i)=>`<section class="tabPanel ${i?'':'active'}" id="tab-${x[0]}">${renderTab(c,x[0])}</section>`).join('');
+  $('detailHero').innerHTML=`<div class="sub">${esc(c.game)} / ${esc(c.company)}</div><h2>${esc(c.title)}</h2><p class="muted">${esc(c.oneLine)}</p><div class="meta"><span>${esc(c.gameType)}</span><span>${esc(c.playerEra)}</span><span>${esc(c.time)}</span><span>${esc(c.lifecycle)}</span><span>声量 ${esc(c.volume)}</span><span>伤害 ${esc(c.damage)}</span><span>${esc(c.outcome)}</span></div>`;
+  $('tabs').innerHTML=TABS.map((x,i)=>`<button class="tab ${i?'':'active'}" data-tab="${x[0]}" onclick="tab('${x[0]}')">${x[1]}</button>`).join('');
+  $('tabContent').innerHTML=TABS.map((x,i)=>`<section class="tabPanel ${i?'':'active'}" id="tab-${x[0]}">${renderTab(c,x[0])}</section>`).join('');
 }
 
 function tab(id){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.tabPanel').forEach(x=>x.classList.remove('active'));
-  const names={timeline:'时间线',players:'玩家心路历程',official:'官方处置',data:'影响量化',insight:'案例启发'};
-  [...document.querySelectorAll('.tab')].find(x=>x.textContent===names[id]).classList.add('active');
-  $(`tab-${id}`).classList.add('active');
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+  document.querySelectorAll('.tabPanel').forEach(x=>x.classList.toggle('active',x.id===`tab-${id}`));
 }
 
 function renderTab(c,id){
-  if(id==='timeline'){
-    const timeline = c.timeline || [];
-    return `<div class="block"><h3>T-window 时间线</h3><div class="timeline">${timeline.map(e=>`<div class="event ${e.side}"><div class="time"><span class="side">${e.side==='official'?'官方动作':'玩家动作'}</span>${e.phase} / ${e.time}</div><div class="name">${e.event}</div><div class="impact">${e.impact}</div>${e.links&&e.links.length?`<div class="eventLinks"><span>来源</span>${e.links.map(l=>`<a target="_blank" href="${l.url}">${l.label}</a>`).join('')}</div>`:''}</div>`).join('')}</div></div><div class="block"><h3>T-window记录规则</h3><p class="muted">所有官方单独动作都要拆开：前瞻、上线/热更新、首次回应、修复/回滚、高层公开信、补偿加码、后续机制承诺均单列。玩家侧反应、扒改动、质疑、翻旧账、是否原谅等也要单列到玩家动作侧，不能写在官方动作卡片里。</p></div>`;
-  }
-  if(id==='players')return renderPlayerJourney(c);
-  if(id==='official')return renderOfficialResponse(c);
-  if(id==='data')return renderImpactQuantification(c);
+  if(id==='profile')return renderProfile(c);
+  if(id==='recap')return renderRecap(c);
+  if(id==='cause')return renderCause(c);
+  if(id==='official')return renderOfficial(c);
+  if(id==='impact')return renderImpact(c);
   if(id==='insight')return renderInsight(c);
+  return '';
 }
 
+/* 0 · 游戏画像 */
+function renderProfile(c){
+  const p=c.profile||{};const s=p.segments||{};
+  const partyCards=(s.parties||[]).map(pt=>`<article class="party party-${esc(pt.tone)}"><span class="partyRole">${esc(pt.role)}</span>${(pt.rows||[]).map(r=>`<p><b>${esc(r.label)}：</b>${esc(r.text)}</p>`).join('')}</article>`).join('');
+  const conflicts=(s.conflicts||[]).map(x=>`<article><b>${esc(x.name)}</b><p>${esc(x.text)}</p></article>`).join('');
+  const segBlock=(s.list||[]).length?`<div class="block"><h3>玩家类型谱（${esc(s.axisType)}）</h3><table class="table"><tr><th>分群</th><th>玩法目标 / 核心利益</th></tr>${s.list.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.interest)}</td></tr>`).join('')}</table>${partyCards?`<h4>三方利益关系</h4><div class="partyMap">${partyCards}</div>`:''}${s.partiesNote?`<p class="muted partiesNote">${esc(s.partiesNote)}</p>`:''}${conflicts?`<h4>核心矛盾</h4><div class="conclusionGrid">${conflicts}</div>`:''}</div>`:'';
+
+  const glossary=(p.glossary||[]).length?`<div class="block"><h3>社区术语词表</h3><div class="glossary">${p.glossary.map(g=>`<div><b>${esc(g.term)}</b><span>${esc(g.def)}</span></div>`).join('')}</div></div>`:'';
+  return `<div class="block"><h3>游戏基础画像</h3><div class="profileGrid">${[['游戏类型与玩法',p.type],['生命周期位置',p.lifecycle],['承重墙张力轴',p.loadBearingAxis],['承重墙是谁',p.loadBearing+(p.loadBearingConfidence?`　〔置信度：${esc(p.loadBearingConfidence)}〕`:'')]].filter(x=>x[1]).map(x=>`<article><b>${x[0]}</b><p>${esc(x[1])}</p></article>`).join('')}</div></div>${segBlock}${glossary}`;
+}
+
+/* 1 · 事件复盘 */
+function renderRecap(c){
+  const r=c.recap||{};const tl=r.timeline||[];
+  let lastSeg=null;
+  const rows=tl.map(e=>{
+    let band='';
+    if(e.segment&&e.segment!==lastSeg){band=`<div class="tlBand"><span>${esc(e.segment)}</span></div>`;lastSeg=e.segment;}
+    return `${band}<div class="event ${e.side}"><div class="time"><span class="side">${e.side==='official'?'官方':'玩家'}</span>${esc(e.phase)} / ${esc(e.time)}</div>${e.name?`<div class="name">${esc(e.name)}</div>`:''}<div class="eventText">${esc(e.event)}</div>${e.impact?`<div class="impact">影响：${esc(e.impact)}</div>`:''}${(e.tags&&e.tags.length)?`<div class="evTags">${e.tags.map(t=>`<span class="evTag">${esc(t)}</span>`).join('')}</div>`:''}${e.links&&e.links.length?`<div class="eventLinks"><span>来源</span>${e.links.map(l=>`<a target="_blank" href="${esc(l.url)}">${esc(l.label)}</a>`).join('')}</div>`:''}</div>`;
+  }).join('');
+  const seg=tl.some(e=>e.segment);
+  return `${r.background?`<div class="block goldBox"><h3>事件背景</h3><p>${esc(r.background)}</p></div>`:''}<div class="block"><h3>时间线（官方 / 玩家双线，T-window 记法）</h3><div class="timeline${seg?' timelineSeg':''}">${rows}</div></div>`;
+}
+
+/* 2 · 原因追溯：催化剂总览 → 玩家心路历程（趋势图含阶段0+可点击折叠卡片）→ 诉求 */
+function renderCause(c){
+  const ca=c.cause||{};
+  const stages=ca.journey||[];
+  const trend=stages.length?renderEmotionTrend(stages):'';
+  const cn=['一','二','三','四','五','六','七','八'];
+  const stageNo=(s,i)=>esc(s.stageNo||cn[i]||(i+1));
+
+  const cats=(ca.catalysts||[]).map(x=>`<span class="catChip">${esc(x)}</span>`).join('');
+  const catBanner=cats?`<div class="block catBanner"><h3>本案命中的催化剂</h3><p class="muted">以下因素叠加，把一次普通的版本平衡调整放大为信任级冲突——它们是贯穿整段心路历程的“放大器”。</p><div class="catChips">${cats}</div></div>`:'';
+
+  const stageBody=s=>{
+    const head=s.summary?`<div class="storyPoint">${esc(s.summary)}</div>`:'';
+    if((s.econ||[]).length){
+      return `${head}<div class="econGrid">${s.econ.map(x=>`<article><b>${esc(x.title)}</b><p>${esc(x.text)}</p></article>`).join('')}</div>${s.nature?`<p><b>舆情性质：</b>${esc(s.nature)}</p>`:''}${s.platform?`<p><b>平台放大：</b>${esc(s.platform)}</p>`:''}`;
+    }
+    return `${head}${s.psychology?`<p><b>玩家怎么想：</b>${esc(s.psychology)}</p>`:''}${s.playerDemand?`<p><b>玩家要什么：</b>${esc(s.playerDemand)}</p>`:''}${s.trigger?`<p><b>触发因素：</b>${esc(s.trigger)}</p>`:''}${(s.evidence||[]).length?`<div class="storyEvidence"><h5>玩家原话摘录</h5>${s.evidence.map(renderEvidenceCard).join('')}</div>`:''}`;
+  };
+
+  const cards=stages.map((s,i)=>`<details class="jStage${s.stageNo==='0'?' jStage0':''}" id="jstage-${i}" name="jacc"${i===0?' open':''}><summary><span class="jBadge">阶段${stageNo(s,i)}</span><span class="jHead"><span class="jStageName">${esc(s.title||s.label)}</span><span class="jMeta">${esc(s.time)}｜${esc(s.emotion)}</span></span></summary><div class="jBody">${stageBody(s)}</div></details>`).join('');
+  const journeyBlock=`<div class="block"><h3>玩家心路历程</h3><p class="muted">阶段0 是事件前的经济存量底色（决定爆发烈度），阶段一起为本次事件的情绪演变。情绪强度趋势为骨架；点击趋势图上的节点，可展开对应阶段的详情卡片。</p>${trend}<div class="jSpine">${cards}</div></div>`;
+
+  const topics=(ca.topics||[]).map(renderTopic).join('');
+
+  const f=ca.demandFunnel||{};
+  const funnel=(f.surface||f.middle||f.deep)?`<div class="block"><h3>诉求三层漏斗</h3><div class="funnelGrid">${[['表层诉求','玩家直接说出口的要求',f.surface],['中层诉求','希望官方真正解决的问题',f.middle],['深层诉求','想重新确认的关系与契约',f.deep]].map((g,i)=>`<section class="funnelLevel level${i+1}"><div class="funnelHead"><b>${g[0]}</b><span>${g[1]}</span></div><ul>${(g[2]||[]).map(x=>(x&&typeof x==='object')?`<li><b class="fnKey">${esc(x.t)}：</b>${esc(x.d)}</li>`:`<li>${esc(x)}</li>`).join('')}</ul></section>`).join('')}</div>${ca.ownership?`<div class="quote"><b>Ownership：</b>${esc(ca.ownership)}</div>`:''}</div>`:'';
+
+  return catBanner+journeyBlock+topics+funnel;
+}
+
+function renderTopic(t){
+  const chain=(t.chain||[]).map((x,i)=>`<article><b>${i+1}. ${esc(x.name)}</b><p>${esc(x.text)}</p></article>`).join('');
+  const ev=(t.evidence||[]).length?`<div class="topicEvidenceHead">关键证据</div><div class="topicEvidence">${t.evidence.map(renderEvidenceCard).join('')}</div>`:'';
+  return `<div class="block topicModule">${t.eyebrow?`<span class="moduleEyebrow">${esc(t.eyebrow)}</span>`:''}${t.title?`<h4 class="topicTitle">${esc(t.title)}</h4>`:''}${t.lead?`<p class="topicLead">${esc(t.lead)}</p>`:''}${chain?`<div class="topicChain">${chain}</div>`:''}${t.takeaway?`<div class="topicTakeaway">${esc(t.takeaway)}</div>`:''}${ev}</div>`;
+}
+
+function renderEmotionTrend(stages){
+  const W=900,H=340,padL=66,padR=28,padT=30,padB=86;
+  const iw=W-padL-padR,ih=H-padT-padB,n=stages.length;
+  const cn=['一','二','三','四','五','六','七','八'];
+  const sno=(s,i)=>esc(s.stageNo||cn[i]||(i+1));
+  const sd=t=>(t||'').replace('2025-','').split(/[ /至]/)[0];
+  const x=i=>padL+(n===1?iw/2:iw*i/(n-1));
+  const y=v=>padT+ih-(Math.max(0,Math.min(100,v))/100)*ih;
+  const pts=stages.map((s,i)=>`${x(i)},${y(s.emotionScore||0)}`).join(' ');
+  const area=`${padL},${padT+ih} ${pts} ${padL+iw},${padT+ih}`;
+  const grid=[0,25,50,75,100];
+  return `<div class="trendWrap"><svg class="emoTrend" viewBox="0 0 ${W} ${H}" role="img" aria-label="玩家情感强度趋势"><defs><linearGradient id="emoArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a32d2d" stop-opacity="0.18"/><stop offset="1" stop-color="#a32d2d" stop-opacity="0.02"/></linearGradient></defs>${grid.map(g=>`<line x1="${padL}" y1="${y(g)}" x2="${padL+iw}" y2="${y(g)}" class="tGrid"/><text x="${padL-12}" y="${y(g)+4}" class="tAxis" text-anchor="end">${g}</text>`).join('')}<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+ih}" class="tAxisLine"/><line x1="${padL}" y1="${padT+ih}" x2="${padL+iw}" y2="${padT+ih}" class="tAxisLine"/><text x="22" y="${padT+ih/2}" class="tAxisTitle" transform="rotate(-90 22 ${padT+ih/2})">玩家情感强度</text><polygon points="${area}" fill="url(#emoArea)"/><polyline points="${pts}" class="tLine" fill="none"/>${stages.map((s,i)=>{const sc=s.emotionScore||0;const cy=y(sc);const ly=sc>=75?cy+28:cy-26;return `<g class="tPoint" onclick="openStage(${i})"><line x1="${x(i)}" y1="${cy}" x2="${x(i)}" y2="${padT+ih}" class="tGuide"/><circle cx="${x(i)}" cy="${cy}" r="7"/><text x="${x(i)}" y="${cy-13}" class="tScore" text-anchor="middle">${esc(sc)}</text><text x="${x(i)}" y="${ly}" class="tCallout" text-anchor="middle">${esc(s.label)}</text><text x="${x(i)}" y="${padT+ih+26}" class="tStageNo" text-anchor="middle">阶段${sno(s,i)}</text><text x="${x(i)}" y="${padT+ih+45}" class="tDate" text-anchor="middle">${esc(s.chartDate||sd(s.time))}</text></g>`;}).join('')}</svg><div class="tHint">点击趋势图节点展开对应阶段（每次只展开一个）↓</div></div>`;
+}
+
+function openStage(i){
+  document.querySelectorAll('.jStage').forEach(d=>{d.open=(d.id==='jstage-'+i);});
+  const wrap=document.querySelector('#tab-cause .trendWrap');
+  if(wrap) wrap.scrollIntoView({behavior:'smooth',block:'start'});
+  const el=document.getElementById('jstage-'+i);
+  if(el){el.classList.add('jFlash');setTimeout(()=>el.classList.remove('jFlash'),1400);}
+}
+
+/* 3 · 官方处置：关键转向要素（顶部）→ 处置时间线（彩色折叠卡片） */
+function renderOfficial(c){
+  const d=c.official||{};
+  const qClass={good:'q-good',bad:'q-bad',neutral:'q-neutral'};
+  const turn=(d.turnElements||[]).length?`<div class="block officialApex"><div class="moduleEyebrow">★ 关键转向要素</div><h3>这次舆情为什么能转好</h3>${d.keyJudgement?`<p class="muted">${esc(d.keyJudgement)}</p>`:''}<div class="turnGrid">${d.turnElements.map(x=>`<article><span class="turnTag">${esc(x.tag)}</span><p>${esc(x.text)}</p></article>`).join('')}</div></div>`:'';
+  const rr=d.responseReview;
+  const stColor=s=>/未|不足/.test(s)?'q-bad':(/部分/.test(s)?'q-neutral':'q-good');
+  let review='';
+  if(rr){
+    const doubts=((rr.attitude||{}).doubts||[]).map(x=>`<tr><td>${esc(x.doubt)}</td><td><span class="stTag ${stColor(x.status)}">${esc(x.status)}</span></td><td>${esc(x.how)}</td><td>${esc(x.timely)}</td></tr>`).join('');
+    const fhead=(key,cls,rest)=>`<h4 class="respHead"><span class="respKey ${cls}">${key}</span><span class="respSub">${rest}</span></h4>`;
+    const attitude=rr.attitude?`<div class="respFrame">${fhead('态度','rkAtt','玩家质疑是否被正面回应')}${rr.attitude.note?`<p class="muted">${esc(rr.attitude.note)}</p>`:''}<table class="table respTable"><tr><th>玩家质疑</th><th>是否回应</th><th>如何回应</th><th>是否及时</th></tr>${doubts}</table></div>`:'';
+    const frame=(o,key,cls,rest)=>o?`<div class="respFrame">${fhead(key,cls,rest)}<ul>${(o.items||[]).map(x=>`<li><b>${esc(x.name)}：</b>${esc(x.text)}</li>`).join('')}</ul>${o.assess?`<p class="respAssess">${esc(o.assess)}</p>`:''}</div>`:'';
+    review=`<div class="block officialApex"><div class="moduleEyebrow">★ 处置评估</div><h3>官方回应拆解与评估</h3>${d.keyJudgement?`<p class="muted">${esc(d.keyJudgement)}</p>`:''}${attitude}<div class="respRow">${frame(rr.improvement,'改进','rkImp','实际修复与机制')}${frame(rr.compensation,'补偿','rkComp','实在的代价')}</div></div>`;
+  }
+  const reviewBlock=review+turn;
+  const cards=(d.stages||[]).map((s,i)=>{
+    const q=qClass[s.quality]||qClass.neutral;
+    const elems=(s.elements||[]).length?`<span class="oElems">${s.elements.map(e=>`<span class="oElem">${esc(e)}</span>`).join('')}</span>`:'';
+    return `<details class="oCard ${q}" id="ocard-${i}" name="oacc"${i===0?' open':''}><summary><span class="oDot"></span><span class="oHead"><span class="oName"><span class="oKind">${esc(s.kind)}</span>${esc(s.name)}</span><span class="oMeta">${esc(s.time)}｜${esc(s.source)}${s.qualityLabel?`　<b class="oQuality">${esc(s.qualityLabel)}</b>`:''}</span></span>${elems}</summary><div class="oBody">${(s.officialExcerpt||[]).length?`<div class="officialQuoteBlock"><b>官方原文 / 要点摘录</b>${s.officialExcerpt.map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}<div class="officialValueGrid"><section><h5>有价值的部分</h5><ul>${(s.valuable||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><section><h5>低价值 / 未回答的部分</h5><ul>${(s.lowValue||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section></div><div class="officialEffect"><b>实际效果：</b>${esc(s.effect)}</div></div></details>`;
+  }).join('');
+  const intro=`<div class="block officialIntro goldBox"><h3>官方处置复盘</h3><p>${esc(d.summary)}</p></div>`;
+  const timeline=`<div class="block"><h3>官方处置时间线</h3><p class="muted">每张卡片为一次官方动作，点击展开详情。色条表示该动作对舆情的实际作用——<span class="qLegend q-bad">红＝激化 / 失分</span><span class="qLegend q-good">绿＝有效缓解</span><span class="qLegend q-neutral">灰＝作用有限</span>。</p><div class="oSpine">${cards}</div></div>`;
+  return `${intro}${timeline}${reviewBlock}${d.caution?`<div class="notice">${esc(d.caution)}</div>`:''}`;
+}
+
+/* 4 · 影响效果（声量 ≠ 伤害）：声量维度 → 情绪与行动 → 产品影响 → 三轴四象限判定 */
+function renderImpact(c){
+  const q=c.impact||{};const quad=q.quadrant||{};
+
+  const metrics=(q.volumeMetrics||[]).map(m=>`<article><b>${esc(m.value)}</b><span>${esc(m.label)}</span><p>${esc(m.note)}</p></article>`).join('');
+  const volBlock=`<div class="block"><h3>声量维度</h3><div class="volHead"><span class="volLevel">声量 ${esc(q.volumeLevel)} 级</span><span class="volConf">置信度：${esc(q.volumeConfidence)}</span></div><div class="impactMetricGrid">${metrics}</div></div>`;
+
+  const ea=q.emotionAction||{};
+  const phases=(ea.phases||[]).map(p=>`<article class="eaCard tone-${esc(p.tone||'')}"><div class="eaHead"><span class="eaPhase">${esc(p.phase)}</span><b>${esc(p.name)}</b><span class="eaTag">${esc(p.tag)}</span></div><ul>${(p.quotes||[]).map(qt=>`<li>${esc(qt)}</li>`).join('')}</ul></article>`).join('');
+  const eaBlock=`<div class="block"><h3>情绪与行动</h3>${ea.summary?`<p>${esc(ea.summary)}</p>`:''}<div class="eaGrid">${phases}</div>${ea.note?`<p class="muted eaNote">${esc(ea.note)}</p>`:''}${ea.caution?`<div class="notice">${esc(ea.caution)}</div>`:''}</div>`;
+
+  const pi=q.productImpact||[];
+  const piBlock=`<div class="block"><h3>产品影响</h3><div class="damageGrid">${pi.map(x=>`<article><div><b>${esc(x.name)}</b>${x.level?`<span>${esc(x.level)}</span>`:''}</div><p>${esc(x.text)}</p></article>`).join('')}</div></div>`;
+
+  const strip=t=>esc((t||'').replace(/^[^：]*：/,''));
+  const axes=[['声量','akVol','来自谁',quad.axis1],['承重墙','akWall','是谁',quad.axis2],['数据','akData','动没动',quad.axis3]];
+  const axisRow=`<div class="axisRow">${axes.map(a=>`<article class="axisCard"><div class="axisHead"><span class="axisKey ${a[1]}">${a[0]}</span><span class="axisSub">${a[2]}</span></div><p>${strip(a[3])}</p></article>`).join('')}</div>`;
+  const cell=(key,name,desc)=>{const on=quad.resultCell===key;return `<div class="qmCell${on?' qmActive':''}"><b>${name}</b>${desc?`<small>${desc}</small>`:''}${on?'<span class="qmHere">← 本案落点</span>':''}</div>`;};
+  const matrix=`<div class="quadMatrix"><div class="qmCorner">声量 ↓ ／ 数据 →</div><div class="qmColHead">数据动了</div><div class="qmColHead">数据没动</div><div class="qmRowHead">声量来自<br>承重墙</div>${cell('crisis','真危机','')}${cell('deficit','信任赤字累积','延迟爆发')}<div class="qmRowHead">声量来自<br>非承重墙</div>${cell('silent','沉默流失','最易误判')}${cell('noise','真噪声','')}</div><p class="muted qmHint">读法：纵轴看声量来自不来自承重墙、横轴看内部数据动没动；高亮格即本案落点。</p>`;
+  const quadBlock=`<div class="block"><h3>三轴四象限判定</h3>${axisRow}${matrix}<div class="quote"><b>判定：</b>${esc(quad.result)}</div>${(q.sideEvidence||[]).length?`<h4>旁证</h4><ul>${q.sideEvidence.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>`;
+
+  const valueBlock=q.valueConclusion?`<div class="block researchNote"><h3>价值结论（待数据验证）</h3><p>${esc(q.valueConclusion)}</p></div>`:'';
+
+  const hero=q.headline?`<div class="block impactHero"><h3>${esc(q.headline)}</h3>${q.headlineSub?`<p>${esc(q.headlineSub)}</p>`:''}</div>`:'';
+  return `${hero}${volBlock}${eaBlock}${piBlock}${quadBlock}${valueBlock}`;
+}
+
+/* 5 · 案例启发（只留可迁移结论，不复述事件 / 情绪 / 处置） */
 function renderInsight(c){
-  const insight = c.insight || null;
-  if(!insight){
-    const cognition=(c.cognitionConclusions||[]).concat((c.cognition||[]).map(x=>({title:'玩家认知变化',text:x})));
-    const lessons=(c.lessons||[]).map(x=>({title:x,text:''}));
-    const templateValue=(c.templateValue||[]).map(x=>({scenario:x[0],value:x[1]}));
-    return renderInsightContent({
-      coreTakeaway:'本案启发仍使用旧字段渲染，建议补充 insight 结构以减少重复。',
-      playerCognitionChanges:cognition,
-      operationLessons:lessons,
-      transferableValue:templateValue
-    });
-  }
-  return renderInsightContent(insight);
-}
-
-function renderInsightContent(insight){
-  const playerChanges = insight.playerCognitionChanges || [];
-  const operationLessons = insight.operationLessons || [];
-  const transferableValue = insight.transferableValue || [];
-  return `<div class="block insightPage"><h3>案例启发：核心判断、玩家认知与治理启发</h3><p class="muted">这一页只保留可迁移的结论，避免重复描述事件经过、玩家情绪和官方处置。</p><div class="quote"><b>核心启发：</b>${insight.coreTakeaway||'暂无核心启发。'}</div><h4>玩家认知变化</h4><div class="conclusionGrid">${playerChanges.map(x=>`<article><b>${x.title}</b><p>${x.text}</p></article>`).join('')}</div><h4>运营治理启发</h4><div class="conclusionGrid">${operationLessons.map(x=>`<article><b>${x.title}</b><p>${x.text}</p></article>`).join('')}</div><h4>可迁移模板价值</h4><table class="table"><tr><th>适用场景</th><th>复用价值</th></tr>${transferableValue.map(x=>`<tr><td>${x.scenario}</td><td>${x.value}</td></tr>`).join('')}</table></div>`;
-}
-
-init().catch(err=>{
-  document.body.innerHTML=`<div class="app"><div class="block"><h3>页面加载失败</h3><p>请通过本地服务器或线上GitHub Pages访问，直接打开file://时浏览器可能会阻止JSON读取。</p><p class="muted">${err.message}</p></div></div>`;
-});
-
-
-
-
-
-
-
-function renderImpactQuantification(c){
-  const q=c.impactQuantification||{};
-  if(!q.summary){return `<div class="block"><h3>影响量化</h3><p class="muted">暂无结构化影响量化数据。</p></div>`;}
-  return `<div class="impactDeep"><section class="block impactIntro"><h3>影响量化：从声量、情绪、行动到伤害判断</h3><p>${q.summary}</p><div class="dataPrinciples">${(q.dataPrinciple||[]).map(x=>`<span>${x}</span>`).join('')}</div></section><section class="impactMetricGrid">${(q.topMetrics||[]).map(x=>`<article><b>${x.value}</b><span>${x.label}</span><p>${x.note}</p></article>`).join('')}</section><section class="block"><h4>平台声量与样本口径</h4><table class="table"><tr><th>平台</th><th>来源</th><th>指标</th><th>样本</th><th>备注</th></tr>${(q.platformSignals||[]).map(x=>`<tr><td>${x.platform}</td><td><a target="_blank" href="${x.url}">${x.title}</a><div class="muted">${x.sourceType||''}</div></td><td>${x.metrics||''}</td><td>${x.sampleComments||0}</td><td>${x.note||''}</td></tr>`).join('')}</table></section><section class="block"><h4>按T-window看影响信号</h4><div class="impactTimeline">${(q.timelineSignals||[]).map(x=>`<article><div><b>${x.phase}</b><span>${x.signal}</span></div><p>${x.metric}</p><em>${x.meaning}</em></article>`).join('')}</div></section><section class="block"><h4>伤害维度评估</h4><div class="damageGrid">${(q.damageDimensions||[]).map(x=>`<article><div><b>${x.dimension}</b><span>${x.level}</span></div><p>${x.evidence}</p><em>${x.interpretation}</em></article>`).join('')}</div></section><section class="block"><h4>情绪与行动信号</h4><div class="signalGrid">${(q.sentimentActions||[]).map(x=>`<article><b>${x.type}</b><span>${x.signal}</span><ul>${(x.examples||[]).map(e=>`<li>${e}</li>`).join('')}</ul></article>`).join('')}</div></section><section class="block"><h4>数据缺口与下一步采集</h4><table class="table"><tr><th>缺口</th><th>当前状态</th><th>下一步</th></tr>${(q.dataGaps||[]).map(x=>`<tr><td>${x.gap}</td><td>${x.status}</td><td>${x.next}</td></tr>`).join('')}</table></section></div>`;
-}
-
-function renderOfficialResponse(c){
-  const d=c.officialResponseDeepDive;
-  if(!d){
-    return `<div class="block"><h3>官方处置复盘</h3><p class="muted">暂无深度复盘数据。</p></div>`;
-  }
-  return `<div class="officialDeep"><section class="block officialIntro"><h3>官方处置复盘：哪些回应有价值，哪些没有接住问题</h3><p>${d.summary}</p><div class="officialJudgement">${d.keyJudgement}</div></section><section class="officialStages">${(d.stages||[]).map((s,i)=>`<article class="officialStage"><div class="officialStageHead"><span>回应${i+1}</span><div><h4>${s.name}</h4><p>${s.time}｜${s.source}</p></div><em>${s.value}</em></div><div class="officialQuoteBlock"><b>官方原文/要点摘录</b>${(s.officialExcerpt||[]).map(x=>`<p>“${x}”</p>`).join('')}</div><div class="officialValueGrid"><section><h5>真正有价值的部分</h5><ul>${(s.valuable||[]).map(x=>`<li>${x}</li>`).join('')}</ul></section><section><h5>低价值或未回答的部分</h5><ul>${(s.lowValue||[]).map(x=>`<li>${x}</li>`).join('')}</ul></section></div><div class="officialEffect"><b>实际效果：</b>${s.effect}</div></article>`).join('')}</section><section class="block"><h4>回应价值分层</h4><table class="table"><tr><th>回应</th><th>判断</th><th>原因</th></tr>${(d.valueMatrix||[]).map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('')}</table></section><section class="block"><h4>为什么主策公开信 + 补偿才真正安抚到玩家</h4><ul>${(d.whyWorked||[]).map(x=>`<li>${x}</li>`).join('')}</ul><div class="quote">平衡判断：Kiki 说“开水出来回应 + 道歉信诚恳 + 送东西诚意足”是对的，但这不是全部。真正有效的是这三者背后补上了责任承担、事故解释、修复清单和制度承诺；如果只有补偿，没有这些解释，玩家仍会把它理解为用福利换沉默。</div></section></div>`;
+  const n=c.insight||{};
+  const core=n.coreInsight?`<div class="block goldBox"><h3>核心启发</h3><p class="coreInsight">${esc(n.coreInsight)}</p></div>`:'';
+  const traits=(n.cognitionTraits||[]).map(x=>`<article><b>${esc(x.trait)} <span class="tagPill">${esc(x.type)}</span></b><p>${esc(x.text)}</p></article>`).join('');
+  const cogBlock=`<div class="block insightApex"><div class="moduleEyebrow">★ 项目北极星落点</div><h3>玩家认知特征</h3>${n.cognitionCoordinate?`<p class="muted">坐标：${esc(n.cognitionCoordinate)}</p>`:''}<div class="conclusionGrid">${traits}</div></div>`;
+  const gov=(n.governance||[]).map(x=>`<article><b>${esc(x.name)}</b><p>${esc(x.text)}</p></article>`).join('');
+  const govBlock=gov?`<div class="block"><h3>运营治理启发</h3><div class="conclusionGrid">${gov}</div></div>`:'';
+  const transfer=(n.transferable||[]).map(x=>`<tr><td>${esc(x.scenario)}</td><td>${esc(x.value)}</td></tr>`).join('');
+  const transBlock=transfer?`<div class="block"><h3>可迁移模板价值</h3><table class="table"><tr><th>适用场景</th><th>复用价值</th></tr>${transfer}</table></div>`:'';
+  const cross=n.crossCase?`<div class="block researchNote"><h3>跨案例综述（项目终产出 · 占位）</h3><p>${esc(n.crossCase)}</p></div>`:'';
+  return core+cogBlock+govBlock+transBlock+cross;
 }
 
 function renderEvidenceCard(e){
-  const identity=e.playerId||e.playerName||'公开评论用户';
+  const identity=e.playerId||'公开评论用户';
   const meta=[e.platform,e.time,e.sourceType].filter(Boolean).join('｜');
-  const source=[e.sourceTitle?`出处：${e.sourceTitle}`:'',e.note?`说明：${e.note}`:''].filter(Boolean).join('｜');
-  return `<a class="commentShot" target="_blank" href="${e.url||'#'}"><div class="commentShotTop"><span class="avatar">${(e.platform||'评').slice(0,1)}</span><div><b>${identity}</b><small>${meta}</small></div></div><div class="commentShotText">${e.text||''}</div>${source?`<div class="commentShotMeta">${source}</div>`:''}<div class="commentShotFoot"><span>${e.heat||'热度待补'}</span><span>点击查看来源</span></div></a>`;
+  return `<a class="commentShot" target="_blank" href="${esc(e.url||'#')}"><div class="commentShotTop"><span class="avatar">${esc((e.platform||'评').slice(0,1))}</span><div><b>${esc(identity)}</b><small>${esc(meta)}</small></div></div><div class="commentShotText">${esc(e.text)}</div>${e.note?`<div class="commentShotMeta">${esc(e.note)}</div>`:''}<div class="commentShotFoot"><span>${esc(e.heat||'热度待补')}</span><span>点击查看来源</span></div></a>`;
 }
 
-function renderGenderConflict(c){
-  const g=c.genderConflictAnalysis;
-  if(!g) return '';
-  return `<div class="majorDivider"><span>专题补充</span></div><section class="genderModule"><div class="moduleEyebrow">玩家代表性与社区治理</div><h4>${g.title}</h4><p>${g.summary}</p><div class="genderChain">${(g.chain||[]).map(x=>`<article><b>${x.label}</b><span>${x.text}</span></article>`).join('')}</div><div class="genderTakeaway">${g.keyTakeaway}</div><div class="genderEvidence"><h5>关键证据</h5>${(g.evidence||[]).map(e=>renderEvidenceCard(e)).join('')}</div></section><div class="majorDivider bottom"><span>回到玩家诉求归纳</span></div>`;
-}
-
-
-function renderEmotionSynthesis(c){
-  const s=c.emotionSynthesis||{};
-  const timeline=s.timeline||[];
-  const sources=s.emotionSources||[];
-  const losses=s.lossSummary||(c.losses||[]).map(x=>({type:x[0],text:x[1]}));
-  return `<div class="majorDivider bottom"><span>阶段情绪与诉求归纳</span></div><section class="synthesisModule"><h4>按时间线看：玩家情绪为什么逐步升级</h4><div class="phaseSummaryList">${timeline.map(x=>`<article><div class="phaseMeta"><b>${x.phase}</b><span>${x.time}</span></div><h5>${x.title}</h5><p>${x.summary}</p><em>${x.emotion}</em></article>`).join('')}</div><h4>玩家情绪来源归纳</h4><div class="emotionSourceGrid">${sources.map(x=>`<article><b>${x.name}</b><p>${x.text}</p></article>`).join('')}</div><h4>玩家认为自己损失了什么</h4><div class="lossGrid">${losses.map(x=>`<article><b>${x.type}</b><p>${x.text}</p></article>`).join('')}</div></section>`;
-}
-
-function renderDemandFunnel(c){
-  const f=c.playerDemandFunnel||{};
-  if(!f.surface&&!f.middle&&!f.deep) return '';
-  const groups=[['表层诉求','玩家直接说出口的要求',f.surface||[]],['中层诉求','玩家希望官方真正解决的问题',f.middle||[]],['深层诉求','玩家想重新确认的关系与契约',f.deep||[]]];
-  return `<div class="demandFunnel"><h4>玩家诉求三层漏斗</h4><div class="funnelGrid">${groups.map((g,i)=>`<section class="funnelLevel level${i+1}"><div class="funnelHead"><b>${g[0]}</b><span>${g[1]}</span></div><ul>${g[2].map(x=>`<li>${x}</li>`).join('')}</ul></section>`).join('')}</div></div>`;
-}
-
-function renderFeedback(c){
-  const f=c.feedbackEvidence||{};
-  const heat=f.sourceHeat||[];
-  const quotes=f.quotes||[];
-  const caveats=f.platformCaveats||[];
-  const byTheme={};
-  quotes.forEach(q=>{(byTheme[q.theme]||(byTheme[q.theme]=[])).push(q)});
-  return `${f.researchNote?`<div class="block researchNote"><h3>原话处理说明</h3><p>${f.researchNote}</p></div>`:''}<div class="feedbackGrid"><div class="block"><h3>玩家反馈证据：社区热度与来源</h3><p class="muted">以下数据用于支撑上面的心理路径判断：先看玩家反馈来自哪里、热度多大，再看原话。当前以公开平台样本为主，个人身份信息不展示。</p><table class="table"><tr><th>平台</th><th>来源</th><th>热度</th><th>样本</th></tr>${heat.map(s=>`<tr><td>${s.platform}</td><td><a target="_blank" href="${s.url}">${s.title}</a><div class="muted">${s.sourceType}${s.note?`｜${s.note}`:''}</div></td><td>${s.metrics}</td><td>${s.sampleComments||0}</td></tr>`).join('')}</table></div><aside class="block"><h3>采集说明</h3>${caveats.map(x=>`<p class="muted">${x}</p>`).join('')}<div class="quote">${f.analysis||''}</div></aside></div><div class="block"><h3>玩家原话摘录：这些话说明了什么</h3>${Object.entries(byTheme).map(([theme,items])=>`<section class="quoteTheme"><h4>${theme}</h4><div class="quoteCards">${items.map(q=>`<article class="quoteCard"><div class="quoteMeta"><span>${q.platform}</span><span>${q.like||0}赞</span>${q.reply?`<span>${q.reply}回复</span>`:''}${q.score?`<span>${q.score}星</span>`:''}</div><p>“${q.text}”</p><div class="quoteAnalysis">${q.analysis||''}</div><a target="_blank" href="${q.sourceUrl}">查看来源</a></article>`).join('')}</div></section>`).join('')}</div>`;
-}
-
-
-function renderPlayerJourney(c){
-  return `<div class="analysisBox fullWidth"><h3>玩家心路历程与诉求</h3><p class="muted">这一页只回答一个问题：玩家情绪为什么一步步升级，又为什么在公开信后只是部分回落。结论性认知放在“案例启发”页，这里聚焦阶段、诉求和证据。</p>${renderJourneyStages(c)}${renderGenderConflict(c)}${renderEmotionSynthesis(c)}</div>`;
-}
-
-
-
-function renderJourneyStages(c){
-  const stages=c.playerJourneyStages||[];
-  if(!stages.length){
-    return `<div class="psySteps"><div><b>1 发现异常</b>动作、表情、骑乘、生态与S1不一致。</div><div><b>2 定性暗改</b>变化不是公告得知，而是玩家自己扒出来。</div><div><b>3 翻旧账</b>平衡、回溯、养成、PVE影响一起被激活。</div><div><b>4 信任受损</b>从“改了什么”变成“以后还会不会改”。</div></div>`;
-  }
-  return `<div class="journeyTrend"><div class="trendHeader"><div><h4>玩家情绪强度趋势图</h4><p class="muted">横轴为事件阶段，纵轴为玩家情绪强度。折线越高，代表该阶段玩家愤怒、质疑和行动化倾向越强。</p></div></div>${renderEmotionLineChart(stages)}<div class="stageStoryList">${stages.map((s,i)=>`<article class="stageStory"><header><span>阶段${i+1}</span><div><h4>${s.stage.replace(/^阶段[一二三四五六七八九十]+：/,'')}</h4><p>${s.time}｜${s.emotion}</p></div></header><section class="storyMain"><div class="storyPoint">${s.stageSummary||s.coreQuestion}</div><p><b>玩家怎么想：</b>${s.psychology}</p><p><b>玩家要什么：</b>${s.playerDemand||''}</p><p><b>触发因素：</b>${s.trigger||''}</p></section><section class="storyEvidence"><h5>玩家反馈截图 / 摘录</h5>${(s.evidence||[]).map(e=>renderEvidenceCard(e)).join('')}</section></article>`).join('')}</div></div>`;
-}
-
-
-
-function renderEmotionLineChart(stages){
-  const W=1040,H=360,padL=58,padR=32,padT=34,padB=106;
-  const innerW=W-padL-padR,innerH=H-padT-padB;
-  const x=i=>padL+(stages.length===1?innerW/2:(innerW*i/(stages.length-1)));
-  const y=v=>padT+innerH-(Math.max(0,Math.min(100,v))/100)*innerH;
-  const points=stages.map((s,i)=>`${x(i)},${y(s.emotionScore)}`).join(' ');
-  const area=`${padL},${padT+innerH} ${points} ${padL+innerW},${padT+innerH}`;
-  const grid=[0,25,50,75,100];
-  return `<div class="lineChartWrap"><svg class="emotionLineChart" viewBox="0 0 ${W} ${H}" role="img" aria-label="玩家情绪强度趋势图">
-    <defs><linearGradient id="emotionArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a32d2d" stop-opacity="0.22"/><stop offset="1" stop-color="#a32d2d" stop-opacity="0.02"/></linearGradient></defs>
-    ${grid.map(g=>`<line x1="${padL}" y1="${y(g)}" x2="${padL+innerW}" y2="${y(g)}" class="grid"/><text x="${padL-12}" y="${y(g)+4}" class="axisLabel" text-anchor="end">${g}</text>`).join('')}
-    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+innerH}" class="axis"/><line x1="${padL}" y1="${padT+innerH}" x2="${padL+innerW}" y2="${padT+innerH}" class="axis"/>
-    <text x="18" y="${padT+innerH/2}" class="axisTitle" transform="rotate(-90 18 ${padT+innerH/2})">玩家情绪强度</text>
-    <polygon points="${area}" fill="url(#emotionArea)"/>
-    <polyline points="${points}" class="emotionLine" fill="none"/>
-    ${stages.map((s,i)=>`<g class="point"><line x1="${x(i)}" y1="${y(s.emotionScore)}" x2="${x(i)}" y2="${padT+innerH}" class="guide"/><circle cx="${x(i)}" cy="${y(s.emotionScore)}" r="6"/><text x="${x(i)}" y="${y(s.emotionScore)-12}" class="score" text-anchor="middle">${s.emotionScore}</text>${renderChartStageCallout(s,i,x(i),y(s.emotionScore),padT,padT+innerH)}<text x="${x(i)}" y="${padT+innerH+28}" class="stageLabel" text-anchor="middle">阶段${i+1}</text><text x="${x(i)}" y="${padT+innerH+48}" class="stageTime" text-anchor="middle">${s.time.split('/')[0].trim()}</text></g>`).join('')}
-  </svg></div>`;
-}
-
-
-function chartStageLabel(stage){
-  const raw=stage.replace(/^阶段[一二三四五六七八九十]+：/,'');
-  const map={
-    '预期升高，但旧账已在积累':['预期升高','旧账积累'],
-    '发现异常，快速定性为“暗改”':['发现异常','定性暗改'],
-    '首次道歉失败，诉求从补偿转向回滚和解释':['首次道歉失败','转向回滚解释'],
-    '问题扩大，变成版本管理与玩家代表性危机':['问题扩大','版本管理/代表性危机'],
-    '公开信与补偿后，进入“接受处理但未原谅”':['公开信与补偿后','接受处理但未原谅']
-  };
-  return map[raw] || raw.split(/[，、]/).filter(Boolean).slice(0,2);
-}
-function renderChartStageCallout(stage,index,cx,cy,top,bottom){
-  const lines=chartStageLabel(stage.stage);
-  const below=stage.emotionScore>=75;
-  const labelY=below?Math.min(bottom-84,cy+34):Math.max(top+18,cy-44);
-  return `<text x="${cx}" y="${labelY}" class="chartCallout" text-anchor="middle">${lines.map((line,j)=>`<tspan x="${cx}" dy="${j?15:0}">${line}</tspan>`).join('')}</text>`;
-}
+init().catch(err=>{
+  document.body.innerHTML=`<div class="app"><div class="block"><h3>页面加载失败</h3><p>请通过本地服务器访问（直接打开 file:// 时浏览器可能阻止 JSON 读取）。</p><p class="muted">${err.message}</p></div></div>`;
+});
